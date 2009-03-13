@@ -1,0 +1,7 @@
+\.tar\.gz$
+\.svn
+_build
+Build
+blib
+Makefile
+multi

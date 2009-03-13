@@ -1,0 +1,11 @@
+lib/HTTP/Request/Multi.pm
+MANIFEST			This list of files
+MANIFEST.SKIP
+t/00use.t
+t/01roundtrip-request.t
+t/02roundtrip-response.t
+t/pod-coverage.t
+t/pod.t
+Makefile.PL
+META.yml
+examples/proxy

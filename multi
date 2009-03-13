@@ -1,0 +1,20 @@
+#!perl -w
+
+use strict;
+use lib qw(lib);
+use HTTP::Request;
+use HTTP::Request::Multi;
+
+my %sub_requests = get_requests();
+my $req          = HTTP::Request::Multi->create_request("http://example.com", undef, \%sub_requests);
+print $req->as_string;
+
+
+sub get_requests {
+    return (
+        1 => HTTP::Request->new(GET  => "http://example.com/1.html"),
+        2 => HTTP::Request->new(GET  => "http://example.com/2.html"),
+#        3 => HTTP::Request->new(POST => "http://example.com/upload.cgi", undef, "Testing"),
+    );
+
+}

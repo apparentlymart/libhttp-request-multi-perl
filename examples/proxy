@@ -1,0 +1,54 @@
+package MultiProxy;
+
+
+=head1 NAME 
+
+MultiProxy - quick and dirty multi HTTP request proxy
+
+=head1 USAGE
+
+    perl proxy [port]
+
+=cut
+
+use lib qw(lib);
+use strict;
+use HTTP::Server::Simple::Request;
+use base qw(HTTP::Server::Simple::Request);
+use HTTP::Status;
+use HTTP::Response;
+use HTTP::Request::Multi;
+use LWP::Parallel;
+use Data::Dumper;
+
+sub net_server { "Net::Server::Fork" }
+
+sub handle_request {
+    my $self       = shift;
+    my $request    = shift;
+
+    my %map        = HTTP::Request::Multi->parse_request($request);
+
+    my $pua        = LWP::Parallel::UserAgent->new();
+
+    $pua->redirect(1);
+    $pua->register($_) for values %map;
+
+    my $entries    = $pua->wait;
+    my %responses;
+    foreach my $key (keys %$entries) {
+        my $id = $entries->{$key}->request->header( HTTP::Request::Multi::ID_FIELD() );
+        $responses{$id} = $entries->{$key}->response;
+    }
+    my $response   = HTTP::Request::Multi->create_response(undef, \%responses);
+    $response->protocol($request->protocol) if defined $request->protocol;
+    print $response->as_string;
+}
+
+package main;
+
+my $port = shift || 9999;
+MultiProxy->new($port)->run;
+
+1;
+
