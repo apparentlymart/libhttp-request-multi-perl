@@ -314,7 +314,7 @@ sub _parse_message {
     # and map it to the Request-ID
     my %map;
     foreach my $part ($mime->parts) {
-        my $res = $ret_class->parse($part->body_as_string);
+        my $res = $ret_class->parse($part->bodyhandle->as_string);
         my $id  = $part->head->get(ID_FIELD()); chomp($id);
         $map{$id} = $res;
     }
