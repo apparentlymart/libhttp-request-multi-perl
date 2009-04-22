@@ -83,7 +83,7 @@ And example request is shown below.
     This is a multi-part message in MIME format...
 
     ------------=_1236704275-16351-0
-    Content-Type: message/http-request
+    Content-Type: application/http-request
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -93,7 +93,7 @@ And example request is shown below.
     Accept: application/json
 
     ------------=_1236704275-16351-0
-    Content-Type: message/http-request
+    Content-Type: application/http-request
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -105,7 +105,7 @@ And example request is shown below.
     Testing
 
     ------------=_1236704275-16351-0
-    Content-Type: message/http-request
+    Content-Type: application/http-request
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -127,7 +127,7 @@ must have a single MIME C<boundary> parameter as per the MIME specification.
 The body of the Response must contain one or more MIME parts. There must be a part corresponding
 to each sub-request made. 
 
-Each part must have a C<Content-Type> of C<message/http-response>. It must also have a 
+Each part must have a C<Content-Type> of C<application/http-response>. It must also have a 
 C<Multipart-Request-ID> header which is unique to the whole Response and refers to the sub-request 
 that this sub-response refers to. The responses need not be returned in the same order that they 
 were requested.
@@ -144,7 +144,7 @@ And example response is shown below.
     This is a multi-part message in MIME format...
 
     ------------=_1236711133-3134-3
-    Content-Type: message/http-response
+    Content-Type: application/http-response
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -156,7 +156,7 @@ And example response is shown below.
 
 
     ------------=_1236711133-3134-3
-    Content-Type: message/http-response
+    Content-Type: application/http-response
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -176,7 +176,7 @@ And example response is shown below.
     </html>
 
     ------------=_1236711133-3134-3
-    Content-Type: message/http-response
+    Content-Type: application/http-response
     Content-Disposition: inline
     Content-Transfer-Encoding: binary
     MIME-Version: 1.0
@@ -218,7 +218,7 @@ sub create_request {
     # otherwise make it a POST by default
     # TODO: allow force override of this
     my $meth = "POST"; #(scalar(grep { 'GET' ne $_->method } values %$requests))? "POST" : "GET";
-    my $msg  = $class->_create_msg('message/http-request', %$requests);
+    my $msg  = $class->_create_msg('application/http-request', %$requests);
 
     # Create the request
     my $req = HTTP::Request->new($meth => $url, $headers, join("", @{$msg->body}));
@@ -261,7 +261,7 @@ sub create_response {
         $responses = $headers;
         $headers   = undef;
     }
-    my $msg  = $class->_create_msg('message/http-response', %$responses);
+    my $msg  = $class->_create_msg('application/http-response', %$responses);
     # Create the response
     # TODO allow passing in of code and message
     my $code = 207;
